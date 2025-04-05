@@ -1,0 +1,178 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.wall{
+  
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  background-size:cover;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.642), rgba(54, 54, 54, 0.294)),  url('./assets/6.jpg');
+  opacity: 80%;
+  background-repeat: no-repeat;
+
+}
+
+/* Styling the form container */
+.form1 {
+  width: 850px;
+  height: 550px;
+  background-color: #ffffff;
+  border-radius: 30px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  display: flex;
+}
+
+/* Left section of the form */
+.form1 .left {
+  
+   background-color: #fa9bc4;
+  width: 50%;
+  height: inherit;
+  border-radius: 30px 30% 30% 30px;
+  position: relative;
+}
+
+.form1 .left div {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  line-height: 40px;
+  width: max-content;
+}
+
+.form1 .left div p {
+  color: #ffffff;
+font-size: 40px;
+text-align: left;
+background-size: cover;
+background-repeat: no-repeat;
+}
+
+.form1 .left div a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14.5px;
+}
+
+.form1 .left div input[type="submit"] {
+  border: 2px solid #fff;
+  width: 160px;
+  height: 46px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Right section of the form */
+.form1 .right {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  padding: 40px;
+  overflow: hidden;
+}
+
+.form1 .right div {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.form1 .right h1 {
+  font-size: 24px;
+text-align: center;
+color: #2d3748;
+margin-bottom: 10px;
+}
+
+.form1 .right input {
+  width: 90%;
+padding: 14px;
+border: 2px solid #edf2f7;
+border-radius: 12px;
+font-size: 15px;
+transition: all 0.3s ease;
+background: #f8fafc;
+margin-top: 10px;
+}
+
+.form1 .right input:focus {
+  outline-color: transparent;
+}
+
+.form1 .right div span {
+  position: absolute;
+  left: 85%;
+  display: block;
+}
+
+.form1 .right .person {
+  top: 23%;
+}
+
+.form1 .right .lock {
+  top: 44%;
+}
+
+.form1 .right div a {
+  color: #000;
+  display: block;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.form1 .right div button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #ffb6c1;
+}
+
+.form1 .right div p {
+  margin: 15px 0;
+}
+
+.form1 .right div div {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.form1 .right div div a {
+  display: inline-block;
+  margin: 0 8px;
+  border: 2px solid #ccc;
+  padding: 6px 5px 0 5px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 24px;
+  width: 17%;
+  height: 50px;
+}
