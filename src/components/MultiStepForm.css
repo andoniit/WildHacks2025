@@ -1,0 +1,262 @@
+/* Reset and basic styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+  
+  body {
+    background: #ffeaf2;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    
+    
+  }
+  
+  /* Container Layout */
+  .container {
+    width: 100%;
+    max-width: 1000px;
+    min-height: 600px;
+    display: flex;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin: 0 auto;
+    margin-top: 7em;
+    
+  }
+  
+  /* Sidebar Styles */
+  .sidebar {
+    width: 500px;
+    padding: 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.642), rgb(255, 255, 255)), url('./assets/2.jpg');
+    background-position: left;
+    background-size: cover;
+    background-blend-mode: multiply;
+  }
+  
+  .sidebar h1 {
+    color: #fa9bc4;
+    font-size: 50px;
+    text-align: left;
+    
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .progress-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 60px;
+  }
+  
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .step-item.active {
+    background: #ffe1ee;
+  }
+  
+  .step-item.completed .step-number {
+    background: #e64b8d;
+    color: white;
+  }
+  
+  .step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    background: #ffb6d3;
+    color: #e64b8d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+  }
+  
+  .step-text {
+    font-weight: 500;
+    color: #ffffff;
+  }
+  
+  .step-item.active .step-text {
+    color: #e64b8d;
+    font-weight: 600;
+  }
+  
+  /* Main Content Styles */
+  .main-content {
+    flex: 1;
+    padding: 40px;
+    background: white;
+    width: 400px;
+  }
+  
+  /* Form Step Animation */
+  .form-step {
+    display: none;
+  }
+  
+  .form-step.active {
+    display: block;
+    animation: slideIn 0.4s ease;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Form Header */
+  .form-header {
+    margin-bottom: 40px;
+  }
+  
+  .form-header h1 {
+    font-size: 24px;
+    text-align: left;
+    color: #2d3748;
+    margin-bottom: 10px;
+  }
+  
+  .form-header p {
+    color: #718096;
+    line-height: 1.6;
+  }
+  
+  /* Form Groups */
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 15px;
+    align-items: left;
+    text-align: left;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #edf2f7;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #ffb6d3;
+    background: white;
+    outline: none;
+  }
+  
+  /* Loved One Section */
+  .loved-one {
+    margin-bottom: 20px;
+  }
+  
+  /* Buttons */
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 40px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ffb6c1;
+  }
+  
+  button.prev {
+    background: #f7fafc;
+    color: #4a5568;
+  }
+  
+  button.next,
+  button.submit {
+    background: #ff99cc;
+    color: white;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  button.prev:hover {
+    background: #edf2f7;
+  }
+  
+  button.next:hover,
+  button.submit:hover {
+    background: #ff85b2;
+  }
+  
+  /* Success Message */
+  .success-message {
+    display: none;
+    text-align: center;
+    padding: 60px 40px;
+  }
+  
+  .success-message.active {
+    display: block;
+    animation: fadeIn 0.6s ease;
+  }
+  
+  .success-message h2 {
+    color: #e64b8d;
+    text-align: left;
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .success-message p {
+    color: #666;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  
+  /* Error State */
+  .error {
+    border-color: #ffb6c1 !important;
+    background: #fff5f5 !important;
+  }
