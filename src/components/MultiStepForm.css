@@ -204,7 +204,8 @@
 
   .symptom-option input[type="checkbox"]:checked + label {
     font-weight: 600;
-    color: #007bff;
+    color: #fa9bc4;
+    
   }
 
   /* Buttons */

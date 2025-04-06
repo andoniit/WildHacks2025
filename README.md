@@ -10,12 +10,10 @@ CycleConnect is a web application that helps individuals track their menstrual c
 3. [Tech Stack Implementation](#tech-stack-implementation)
 4. [Example Workflow](#example-workflow)
 5. [Why CycleConnect is Unique](#why-cycleconnect-is-unique)
-6. [Benefits](#benefits)
-7. [Hackathon Timeline (10 Hours)](#hackathon-timeline-10-hours)
-8. [Project Setup & How to Run](#project-setup--how-to-run)
-9. [Contributing](#contributing)
-10. [License](#license)
-11. [Contact](#contact)
+6. [Project Setup & How to Run](#project-setup--how-to-run)
+7. [Benefits](#benefits)
+8. [Future scope](#future-scope)
+
 
 ---
 
@@ -85,7 +83,7 @@ One-Liner for Scalability & Stability:
 
 ---
 
-## Workflow
+## Example Workflow
 
 1. A user logs into CycleConnect and sets up a profile with cycle details.  
 2. They choose to share cycle updates with their partner and a close friend.  
@@ -111,6 +109,61 @@ One-Liner for Scalability & Stability:
 
 ---
 
+## Project Setup & How to Run
+
+### Prerequisites
+- Node.js (v14.0.0 or later)
+- npm (v6.0.0 or later)
+- MongoDB (v4.4 or later)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/cycleconnect.git
+   cd cycleconnect
+   ```
+
+2. **Set up the backend**
+   ```bash
+   cd server
+   npm install
+   ```
+
+3. **Configure environment variables**
+   - Create a `.env` file in the server directory
+   - Add the following variables:
+     ```
+     PORT=5000
+     MONGODB_URI=mongodb://localhost:27017/cycleconnect
+     JWT_SECRET=your_jwt_secret
+     TWILIO_ACCOUNT_SID=your_twilio_sid
+     TWILIO_AUTH_TOKEN=your_twilio_token
+     TWILIO_PHONE_NUMBER=your_twilio_phone
+     GEMINI_API_KEY=your_gemini_api_key
+     ```
+
+4. **Set up the frontend**
+   ```bash
+   cd ../src
+   npm install
+   ```
+
+5. **Run the application**
+   - Start the backend server
+     ```bash
+     cd server
+     npm run dev
+     ```
+   - Start the frontend development server
+     ```bash
+     cd src
+     npm start
+     ```
+   - Access the application at `http://localhost:3000`
+
+---
+
 ## Benefits
 
 - **For Users:**  
@@ -122,4 +175,34 @@ One-Liner for Scalability & Stability:
 
 ---
 
+## Future Scope
 
+1. **Advanced AI Integration**
+   - Natural language processing for journal entries to identify patterns
+   - Retell Ai agent integration
+
+2. **Expanded Health Tracking**
+   - Integration with wearable devices to track physiological changes
+   - Fertility tracking and planning features
+   - Medication tracking and reminders
+
+3. **Enhanced Communication Tools**
+   - In-app messaging between users and their support network
+   - Video consultation with healthcare providers
+   - Group video chat for support groups
+
+4. **Global Accessibility**
+   - Multi-language support
+   - Culturally sensitive content and recommendations
+   - Offline functionality for areas with limited connectivity
+
+5. **Health Professional Portal**
+   - Dedicated interface for healthcare providers
+   - Secure data sharing with medical professionals
+   - Telemedicine integration
+
+6. **Research Contributions**
+   - Anonymous, opt-in data sharing for menstrual health research
+   - Collaboration with medical institutions to improve menstrual healthcare
+
+---

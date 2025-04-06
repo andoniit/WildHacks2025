@@ -124,11 +124,12 @@
 .edit-button {
     margin-top: 20px;
     padding: 10px 16px;
-    border: 1px solid #4a90e2;
+    border: 1px solid #fa9bc4;
     border-radius: 6px;
     background-color: white;
-    color: #4a90e2;
     font-weight: 600;
+    color: #fa9bc4;
+
     cursor: pointer;
     transition: 0.2s;
     align-self: flex-start;
