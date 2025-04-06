@@ -42,6 +42,13 @@ const API_ENDPOINTS = {
   CALENDAR: {
     GET_ALL: `${API_BASE_URL}/calendar`,
   },
+  // AI endpoints
+  AI: {
+    CONVERSATION: `${API_BASE_URL}/ai/conversation`,
+    CONVERSATIONS: `${API_BASE_URL}/ai/conversations`,
+    INSIGHTS: `${API_BASE_URL}/ai/insights`,
+    RECOMMENDATION: `${API_BASE_URL}/ai/recommendation`,
+  },
 };
 
 export default API_ENDPOINTS;

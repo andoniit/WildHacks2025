@@ -44,34 +44,44 @@ class GeminiService {
    */
   createInsightPrompt(userData) {
     return `
-You are a supportive menstrual health assistant for the CycleConnect app. Please analyze the following user data and provide personalized insights and self-care recommendations.
+    You are an expert of menstrual health and are really kind and sweet. Please analyze the following user data and provide personalized insights and self-care recommendations.
 
-USER INFORMATION:
-Name: ${userData.userName}
-Age: ${userData.age}
-Average Cycle Length: ${userData.avgCycleLength} days
+    Use time frame, What were the gaps between the menstural cycle, what notes says, what may be the cause of the notes
 
-RECENT SYMPTOMS:
-${userData.symptoms.join(', ')}
+    USER INFORMATION:
+    Name: ${userData.userName}
+    Age: ${userData.age}
+    Average Cycle Length: ${userData.avgCycleLength} days
 
-RECENT CYCLE HISTORY:
-${userData.cycles.map(cycle => `
-- Period from ${new Date(cycle.startDate).toLocaleDateString()} to ${new Date(cycle.endDate).toLocaleDateString()}
-  Symptoms: ${cycle.symptoms.join(', ') || 'None recorded'}
-`).join('\n')}
+    RECENT SYMPTOMS:
+    ${userData.symptoms.join(', ')}
 
-Based on this information, please provide:
-1. A brief analysis of the user's symptom patterns
-2. 3-5 specific self-care recommendations to address their common symptoms
-3. Any lifestyle adjustments that might help with their specific pattern
-4. When they should consider seeking medical advice (if applicable)
+    RECENT CYCLE HISTORY:
+    ${userData.cycles.map(cycle => `
+    - Period from ${new Date(cycle.startDate).toLocaleDateString()} to ${new Date(cycle.endDate).toLocaleDateString()}
+      Symptoms: ${cycle.symptoms.join(', ') || 'None recorded'}
+    `).join('\n')}
 
-Please format your response as JSON with the following structure:
-{
-  "suggestions": "Your supportive analysis here",
-  "recommendations": ["recommendation1", "recommendation2", "recommendation3", "recommendation4", "recommendation5"]
-}
+    Based on this information, please provide:
+    1. A brief analysis of the user's symptom patterns and give answer in 1000 words
+    2. 5-6 specific self-care recommendations to address their common symptoms
+    3. Any lifestyle adjustments that might help with their specific pattern
+    4. When they should consider seeking medical advice (if applicable)
+    5. Look into the internet for more information about the symptoms and give answer in 1000 words
+
+    Please format your response as JSON with the following structure:
+    {
+      "suggestions": "Based on your provided details, it appears that your menstrual cycle is within a typical range, and there are no alarming patterns in terms of duration or intensity of symptoms. This is a good indication that your overall reproductive health is on track. Still, it’s important to continue monitoring any changes and keep maintaining a healthy lifestyle. \n\nHere are some more in-depth insights for you:\n\n1. *Symptom Patterns: If your symptoms (such as cramps, mood swings, or fatigue) are mild and occur around the same days of your cycle each month, it suggests you are experiencing normal hormonal fluctuations. However, if any symptom becomes severe or disrupts your daily life, it’s worth noting and discussing with a healthcare professional.\n\n2. **Lifestyle & Wellness: Keeping track of your diet, exercise, and stress levels can greatly impact how you feel before and during your period. A balanced diet rich in nutrients and moderate exercise can alleviate some premenstrual discomforts.\n\n3. **Healthy Cycle Encouragement: Since your cycle appears normal, it’s beneficial to continue your current health habits. Make sure to stay hydrated, get plenty of sleep, and consider stress-relieving techniques like yoga or meditation. These can contribute to more comfortable menstrual cycles in the long run.\n\n4. **Safe Sex Recommendations (for 18+): If you’re sexually active, practicing safe sex is crucial for preventing sexually transmitted infections (STIs) and unwanted pregnancies. Using condoms or other barrier methods, understanding your fertility window, and discussing birth control options with your partner or healthcare provider can all help ensure a healthy sex life. If you’re interested in more in-depth guidance, you might explore:\n - Planned Parenthood: https://www.plannedparenthood.org\n - CDC’s Contraception Guidance: https://www.cdc.gov/reproductivehealth/contraception/index.htm\n\n5. **When to Seek Medical Advice*: While everything seems normal, you should consider reaching out to a healthcare professional if you notice any major changes, such as prolonged bleeding, unusually heavy flow, missed periods (when not on birth control), or severe pain that disrupts your daily activities. These could indicate underlying issues that may require medical attention.\n\nFor further reading on normal menstrual cycles and self-care strategies, these articles might be helpful:\n - Mayo Clinic on Menstrual Cycle Basics: https://www.mayoclinic.org/healthy-lifestyle/womens-health/in-depth/menstrual-cycle/art-20047186\n - Office on Women’s Health (U.S.) guidance on menstruation: https://www.womenshealth.gov/menstruation\n",
+      "recommendations": [
+        "Continue tracking your symptoms daily to detect any patterns or changes over time.",
+        "Stay hydrated and maintain a balanced diet with plenty of fruits, vegetables, and whole grains.",
+        "Incorporate moderate exercise such as walking, stretching, or gentle yoga to reduce menstrual discomfort.",
+        "Practice relaxation techniques like deep breathing, meditation, or journaling to manage stress effectively.",
+        "If you are 18 or older and sexually active, explore safe sex practices, including barrier methods and regular check-ups for STI screening."
+      ]
+    }
 `;
+
   }
 
   /**

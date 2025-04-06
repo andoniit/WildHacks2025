@@ -294,10 +294,97 @@ const analyzeConversationInsights = async (req, res, next) => {
   }
 };
 
+/**
+ * Get personalized recommendation based on calendar data
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
+const getPersonalizedRecommendation = async (req, res, next) => {
+  try {
+    const { email } = req.user;
+    const { calendarData } = req.body;
+    
+    if (!calendarData || !Array.isArray(calendarData)) {
+      throw new ApiError(400, 'Calendar data is required and must be an array');
+    }
+    
+    // Find user
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+    
+    // Use Gemini service to get personalized recommendation
+    const geminiService = require('../../services/gemini.service');
+    
+    // Format the user data for Gemini
+    const userData = {
+      userName: user.name || 'User',
+      age: user.age || 25,
+      avgCycleLength: user.cycleLength || 28,
+      symptoms: [],
+      cycles: []
+    };
+    
+    // Parse the calendar data to extract cycle information and symptoms
+    if (calendarData.length > 0) {
+      // Process calendar entries to extract cycle and symptom information
+      const symptoms = new Set();
+      
+      // Map calendar entries to cycle data format
+      calendarData.forEach(entry => {
+        // Extract symptoms if category is 'symptom'
+        if (entry.category?.toLowerCase() === 'symptom' && entry.title) {
+          symptoms.add(entry.title.toLowerCase());
+        }
+        
+        // If this is a period entry, add it to cycles
+        if (entry.category?.toLowerCase() === 'period') {
+          userData.cycles.push({
+            startDate: entry.startDate,
+            endDate: entry.endDate || entry.startDate,
+            symptoms: []
+          });
+        }
+      });
+      
+      // Add extracted symptoms to userData
+      userData.symptoms = Array.from(symptoms);
+    }
+    
+    // Get recommendation from Gemini
+    const recommendation = await geminiService.getSymptomInsights(userData);
+    
+    // Combine suggestions and recommendations
+    let formattedRecommendation = recommendation.suggestions;
+    
+    if (recommendation.recommendations && recommendation.recommendations.length > 0) {
+      formattedRecommendation += '\n\nRecommendations:\n';
+      recommendation.recommendations.forEach((rec, index) => {
+        formattedRecommendation += `\n${index + 1}. ${rec}`;
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      recommendation: formattedRecommendation,
+      metadata: {
+        basedOn: userData.cycles.length,
+        symptoms: userData.symptoms
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   startConversation,
   endConversation,
   getConversationHistory,
   getConversation,
-  analyzeConversationInsights
+  analyzeConversationInsights,
+  getPersonalizedRecommendation
 };

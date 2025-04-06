@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/auth.middleware');
+const aiController = require('../controllers/ai.controller');
 
 // This is a placeholder for the controller import
 // Will be implemented when we create the controller file
@@ -50,5 +51,8 @@ router.get('/insights', verifyToken, (req, res) => {
     user: req.user
   });
 });
+
+// Get personalized recommendation based on calendar data
+router.post('/recommendation', verifyToken, aiController.getPersonalizedRecommendation);
 
 module.exports = router;
