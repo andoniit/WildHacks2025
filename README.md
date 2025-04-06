@@ -61,7 +61,7 @@ CycleConnect goes beyond traditional menstrual tracking by focusing on **buildin
 
 ## Tech Stack Implementation
 
-1. **Frontend (React + Vite)**  
+1. **Frontend (React)**  
    - Clean, user-friendly interface for logging symptoms, viewing cycle trends, and managing sharing preferences.
 
 2. **Backend (Node.js + Express)**  
@@ -79,7 +79,7 @@ CycleConnect goes beyond traditional menstrual tracking by focusing on **buildin
 
 ---
 
-## Example Workflow
+## Workflow
 
 1. A user logs into CycleConnect and sets up a profile with cycle details.  
 2. They choose to share cycle updates with their partner and a close friend.  
@@ -116,27 +116,4 @@ CycleConnect goes beyond traditional menstrual tracking by focusing on **buildin
 
 ---
 
-## Hackathon Timeline (10 Hours)
 
-1. **Hour 1–2:**  
-   - Set up basic React frontend (forms for symptom logging and sharing preferences).
-2. **Hour 3–4:**  
-   - Develop Node.js/Express backend APIs for data storage and notifications.
-3. **Hour 5–6:**  
-   - Integrate Gemini AI API to analyze symptoms and generate insights.
-4. **Hour 7–8:**  
-   - Add basic community group functionality (discussion boards or chat).
-5. **Hour 9:**  
-   - Implement notifications (via Twilio, email, or similar services).
-6. **Hour 10:**  
-   - Polish UI/UX, perform testing, and prepare a demo presentation.
-
----
-
-## Project Setup & How to Run
-
-Make sure you have **Node.js** and **npm** (or **yarn**) installed on your system.
-
-1. **Clone or Download the Repository**
-   ```bash
-   git clone https://github.com/andoniit/cycleconnect.git
