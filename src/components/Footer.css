@@ -1,0 +1,27 @@
+.site-footer {
+  background-color: #f8f9fa;
+  padding: 20px 40px;
+  border-top: 1px solid #e4e4e4;
+  margin-top: 40px;
+  font-family: sans-serif;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 14px;
+  color: #444;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-left p {
+  margin: 4px 0;
+}

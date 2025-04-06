@@ -56,7 +56,7 @@ const LoginPage = () => {
           <p>Hello, Welcome! to <br></br>CycleConnect</p>
           <span>Don't have an account?</span>
           <Link to="/register">
-            <input type="button" value="Register" />
+            <input type="submit" value="Register" />
           </Link>
         </div>
       </div>

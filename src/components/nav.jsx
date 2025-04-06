@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import "./Navbar.css";
+import logo from "./assets/7.png";
 
 export function Navbar() {
   return (
@@ -10,16 +11,16 @@ export function Navbar() {
         <div className="navbar-logo">
           <a href="/">
             {/* Replace '/logo.png' with your logo path */}
-            <img src="/logo.png" alt="Logo" />
+            <img src={logo} alt="Logo" />
           </a>
         </div>
         {/* Navigation Links */}
         <div className="navbar-links">
-          <a href="/calendar">Calendar</a>
-          <a href="/recommendation">Recommendation</a>
+          <a href="/timeline">Calendar</a>
+          <a href="/airecommend">Ai Personal Recommendation</a>
           <a href="/community">Community</a>
-          <a href="/educational-resources">Educational Resources</a>
-          <a href="/my-account">My Account</a>
+          <a href="/education">Educational Resources</a>
+          <a href="/userprofile">My Account</a>
         </div>
       </div>
     </nav>

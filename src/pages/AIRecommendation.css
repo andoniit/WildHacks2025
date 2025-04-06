@@ -1,0 +1,62 @@
+.ai-rec-wrapper {
+    width: 100%;
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+  
+  .ai-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .orb-section {
+    width: 100%;
+    height: 600px;
+    position: relative;
+  }
+  
+  .button-section {
+    text-align: center;
+  }
+  
+  .ai-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #ff99cc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .ai-button:hover {
+    background-color: #e64b8d;
+  }
+
+  .response-box {
+    max-width: 700px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .highlighted-api {
+    color: #f588ff;
+    font-weight: 700;
+    font-size: 2em;
+  }

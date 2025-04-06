@@ -1,0 +1,116 @@
+.edu-container {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 24px;
+    font-family: 'Segoe UI', sans-serif;
+    background: #fff;
+    border-radius: 12px;
+    
+    width: 90%;
+    height: 90%;
+  }
+  
+  .edu-title {
+    font-size: 40px;
+    font-weight: 600;
+    color: #ff83d0;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .edu-section {
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .edu-section h2 {
+    font-size: 30px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 10px;
+  }
+  
+  .edu-subsection {
+    margin-bottom: 24px;
+    padding-left: 16px;
+    border-left: 4px solid #a3a3ff;
+    background: #f9f9ff;
+    padding: 12px 16px;
+    border-radius: 6px;
+  }
+  
+  .edu-subsection h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+  }
+  
+  .edu-subsection ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    color: #4a5568;
+    font-size: 18px;
+  }
+  
+  .edu-subsection li {
+    margin-bottom: 4px;
+    line-height: 1.6;
+    color: #555;
+    font-size: 18px;
+  }
+  
+  .edu-subsection p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #718096;
+  }
+  
+  .edu-subsection a {
+    color: #4a90e2;
+    text-decoration: none;
+  }
+  
+  .edu-subsection a:hover {
+    text-decoration: underline;
+  }
+
+.edu-wrapper {
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+}
+
+.edu-banner {
+  flex: 0 0 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edu-banner img {
+  max-width: 100%;
+  border-radius: 12px;
+  
+}
+
+.edu-content {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 90vh;
+  padding: 0 10px;
+}
+
+.disclaimer {
+  font-size: 13px;
+  color: #999;
+  margin-top: 20px;
+  font-style: italic;
+}
