@@ -64,6 +64,10 @@ try {
   // Alert routes
   app.use('/api/alerts', require('./api/routes/alert.routes'));
   console.log('Alert routes registered');
+  
+  // Calendar routes
+  app.use('/api/calendar', require('./api/routes/calendar.routes'));
+  console.log('Calendar routes registered');
 
   console.log('All routes initialized successfully');
 } catch (err) {

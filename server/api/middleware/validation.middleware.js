@@ -151,6 +151,33 @@ const validateAlert = (req, res, next) => {
   }
 };
 
+/**
+ * Middleware for validating calendar event data
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
+const validateCalendarEvent = (req, res, next) => {
+  const { date, category, title } = req.body;
+  
+  // Validate date
+  if (!date || !isValidDate(date)) {
+    return next(new ApiError(400, 'Valid date is required'));
+  }
+  
+  // Validate category
+  if (!category || typeof category !== 'string' || category.trim() === '') {
+    return next(new ApiError(400, 'Valid category is required'));
+  }
+  
+  // Validate title
+  if (!title || typeof title !== 'string' || title.trim() === '') {
+    return next(new ApiError(400, 'Valid title is required'));
+  }
+  
+  next();
+};
+
 // Helper functions
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -159,12 +186,13 @@ function isValidEmail(email) {
 
 function isValidDate(dateString) {
   const date = new Date(dateString);
-  return date instanceof Date && !isNaN(date);
+  return !isNaN(date.getTime());
 }
 
 module.exports = {
   validateUserRegistration,
   validateCycleLog,
   validateContact,
-  validateAlert
+  validateAlert,
+  validateCalendarEvent
 };
