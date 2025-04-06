@@ -316,10 +316,10 @@ const getPersonalizedRecommendation = async (req, res, next) => {
       throw new ApiError(404, 'User not found');
     }
     
-    // Use Gemini service to get personalized recommendation
-    const geminiService = require('../../services/gemini.service');
+    // Use AI service to get personalized recommendation
+    const aiService = require('../../services/gemini.service');
     
-    // Format the user data for Gemini
+    // Format the user data for AI
     const userData = {
       userName: user.name || 'User',
       age: user.age || 25,
@@ -354,8 +354,8 @@ const getPersonalizedRecommendation = async (req, res, next) => {
       userData.symptoms = Array.from(symptoms);
     }
     
-    // Get recommendation from Gemini
-    const recommendation = await geminiService.getSymptomInsights(userData);
+    // Get recommendation from AI
+    const recommendation = await aiService.getSymptomInsights(userData);
     
     // Combine suggestions and recommendations
     let formattedRecommendation = recommendation.suggestions;

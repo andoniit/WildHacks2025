@@ -1,15 +1,18 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const OpenAI = require('openai');
 const logger = require('../utils/logger');
 
 /**
- * Service for integrating with Google's Gemini AI for symptom analysis and insights
+ * Service for integrating with OpenAI for symptom analysis and insights
+ * (Previously used Google's Gemini AI)
  */
-class GeminiService {
+class AIService {
   constructor() {
-    // Initialize Gemini API client
-    this.apiKey = process.env.GEMINI_API_KEY;
-    this.genAI = new GoogleGenerativeAI(this.apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    // Initialize OpenAI client
+    this.apiKey = process.env.OPENAI_API_KEY;
+    this.openai = new OpenAI({
+      apiKey: this.apiKey
+    });
+    this.model = 'gpt-4o-mini'; // Using gpt-4o-mini model
   }
 
   /**
@@ -20,16 +23,27 @@ class GeminiService {
   async getSymptomInsights(userData) {
     try {
       // Create prompt with user data and symptoms
-      const prompt = this.createInsightPrompt(userData);
-
-      // Generate response from Gemini
-      const result = await this.model.generateContent(prompt);
-      const response = result.response.text();
+      const userPrompt = this.createInsightPrompt(userData);
+      
+      // Generate response from OpenAI
+      const completion = await this.openai.chat.completions.create({
+        model: this.model,
+        messages: [
+          { 
+            role: "user", 
+            content: `You are an expert of menstrual health and are really kind and sweet. Please analyze the following user data and provide personalized insights and self-care recommendations.\n\n${userPrompt}` 
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      });
+      
+      const response = completion.choices[0].message.content;
 
       // Parse the response
       return this.parseInsightResponse(response);
     } catch (error) {
-      logger.error(`Error getting Gemini insights: ${error.message}`);
+      logger.error(`Error getting AI insights: ${error.message}`);
       
       // Return fallback recommendations if AI fails
       return this.getFallbackInsights(userData.symptoms);
@@ -37,15 +51,13 @@ class GeminiService {
   }
 
   /**
-   * Create a structured prompt for the Gemini AI
+   * Create a structured prompt for the AI
    * @private
    * @param {Object} userData - User data and symptom history
    * @returns {String} - Formatted prompt
    */
   createInsightPrompt(userData) {
     return `
-    You are an expert of menstrual health and are really kind and sweet. Please analyze the following user data and provide personalized insights and self-care recommendations.
-
     Use time frame, What were the gaps between the menstural cycle, what notes says, what may be the cause of the notes
 
     USER INFORMATION:
@@ -71,16 +83,10 @@ class GeminiService {
 
     Please format your response as JSON with the following structure:
     {
-      "suggestions": "Based on your provided details, it appears that your menstrual cycle is within a typical range, and there are no alarming patterns in terms of duration or intensity of symptoms. This is a good indication that your overall reproductive health is on track. Still, it’s important to continue monitoring any changes and keep maintaining a healthy lifestyle. \n\nHere are some more in-depth insights for you:\n\n1. *Symptom Patterns: If your symptoms (such as cramps, mood swings, or fatigue) are mild and occur around the same days of your cycle each month, it suggests you are experiencing normal hormonal fluctuations. However, if any symptom becomes severe or disrupts your daily life, it’s worth noting and discussing with a healthcare professional.\n\n2. **Lifestyle & Wellness: Keeping track of your diet, exercise, and stress levels can greatly impact how you feel before and during your period. A balanced diet rich in nutrients and moderate exercise can alleviate some premenstrual discomforts.\n\n3. **Healthy Cycle Encouragement: Since your cycle appears normal, it’s beneficial to continue your current health habits. Make sure to stay hydrated, get plenty of sleep, and consider stress-relieving techniques like yoga or meditation. These can contribute to more comfortable menstrual cycles in the long run.\n\n4. **Safe Sex Recommendations (for 18+): If you’re sexually active, practicing safe sex is crucial for preventing sexually transmitted infections (STIs) and unwanted pregnancies. Using condoms or other barrier methods, understanding your fertility window, and discussing birth control options with your partner or healthcare provider can all help ensure a healthy sex life. If you’re interested in more in-depth guidance, you might explore:\n - Planned Parenthood: https://www.plannedparenthood.org\n - CDC’s Contraception Guidance: https://www.cdc.gov/reproductivehealth/contraception/index.htm\n\n5. **When to Seek Medical Advice*: While everything seems normal, you should consider reaching out to a healthcare professional if you notice any major changes, such as prolonged bleeding, unusually heavy flow, missed periods (when not on birth control), or severe pain that disrupts your daily activities. These could indicate underlying issues that may require medical attention.\n\nFor further reading on normal menstrual cycles and self-care strategies, these articles might be helpful:\n - Mayo Clinic on Menstrual Cycle Basics: https://www.mayoclinic.org/healthy-lifestyle/womens-health/in-depth/menstrual-cycle/art-20047186\n - Office on Women’s Health (U.S.) guidance on menstruation: https://www.womenshealth.gov/menstruation\n",
-      "recommendations": [
-        "Continue tracking your symptoms daily to detect any patterns or changes over time.",
-        "Stay hydrated and maintain a balanced diet with plenty of fruits, vegetables, and whole grains.",
-        "Incorporate moderate exercise such as walking, stretching, or gentle yoga to reduce menstrual discomfort.",
-        "Practice relaxation techniques like deep breathing, meditation, or journaling to manage stress effectively.",
-        "If you are 18 or older and sexually active, explore safe sex practices, including barrier methods and regular check-ups for STI screening."
-      ]
+      "suggestions": "Your supportive analysis here",
+      "recommendations": ["recommendation1", "recommendation2", "recommendation3", "recommendation4", "recommendation5"]
     }
-`;
+    `;
 
   }
 
@@ -114,7 +120,7 @@ class GeminiService {
         recommendations: recommendations.length > 0 ? recommendations : this.getDefaultRecommendations()
       };
     } catch (error) {
-      logger.error(`Error parsing Gemini response: ${error.message}`);
+      logger.error(`Error parsing AI response: ${error.message}`);
       return this.getFallbackInsights();
     }
   }
@@ -180,4 +186,4 @@ class GeminiService {
   }
 }
 
-module.exports = new GeminiService();
+module.exports = new AIService();
