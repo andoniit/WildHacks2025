@@ -1,0 +1,115 @@
+.community-container {
+    display: flex;
+    padding: 40px;
+    gap: 40px;
+    max-width: 1800px;
+    margin: auto;
+    height: 95vh;
+    width: 100%;
+    background-image: url('../components/assets/2.jpg');
+  }
+  
+  .group-section {
+    width: 30%;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .group-section h2 {
+    margin-bottom: 10px;
+    color: #000000;
+  }
+  
+  .group-section input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .group-section button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff99cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  
+  .group-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .group-section li button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    background-color: #eee;
+    border: none;
+    border-radius: 6px;
+    text-align: left;
+    cursor: pointer;
+    color: #000000;
+
+  }
+  
+  .chat-section {
+    width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-box {
+    flex: 1;
+    overflow-y: auto;
+    height: 400px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f5f5f5;
+  }
+  
+  .chat-msg {
+    padding: 8px 12px;
+    background: #fff;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    font-size: 1.3em;
+  }
+  
+  .chat-input {
+    display: flex;
+    gap: 10px;
+    font-size: 1.3em;
+
+  }
+  
+  .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #000000;
+    font-size: 1em;
+
+  }
+  
+  .chat-input button {
+    padding: 10px 20px;
+    background-color: #ff88f7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
