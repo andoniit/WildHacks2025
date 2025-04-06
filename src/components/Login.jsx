@@ -31,8 +31,8 @@ const LoginPage = () => {
       if (response.data && response.data.token) {
         localStorage.setItem('cycleconnect_token', response.data.token);
         console.log('Token stored:', response.data.token.substring(0, 10) + '...');
-        // Redirect to timeline page
-        window.location.href = '/timeline';
+        // Redirect to user profile page
+        window.location.href = '/userprofile';
       } else {
         console.error('No token received in login response');
         setError('Authentication failed. Please try again.');
