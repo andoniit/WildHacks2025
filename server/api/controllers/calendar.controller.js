@@ -40,13 +40,13 @@ const notifyContactsAboutPeriod = async (email, startDate) => {
     // Custom message for period notification
     const periodMessage = `${userName} is expected to get her periods in ${daysUntil} days\n\nShe needs your support`;
     
-    // Send SMS to each contact that has receiveUpdates enabled
+    // Send SMS and WhatsApp to each contact that has receiveUpdates enabled
     const notifications = contactData.contacts
       .filter(contact => contact.notificationPreferences.receiveUpdates)
       .map(async (contact) => {
         try {
-          // Send custom message directly instead of using a template
-          const result = await twilioService.sendSMS(
+          // Send dual channel notification (both SMS and WhatsApp)
+          const result = await twilioService.sendDualChannelNotification(
             contact.phoneNumber, 
             'general', // Using general template type but we'll override the message
             { 
@@ -61,13 +61,15 @@ const notifyContactsAboutPeriod = async (email, startDate) => {
           
           return {
             contactName: contact.name,
-            status: 'success',
-            messageId: result.sid || 'dev-mode'
+            phoneNumber: contact.phoneNumber,
+            smsStatus: result.sms.sid ? 'success' : 'dev-mode',
+            whatsappStatus: result.whatsapp.sid ? 'success' : 'dev-mode'
           };
         } catch (error) {
-          console.error(`Failed to send SMS to ${contact.name} (${contact.phoneNumber}):`, error.message);
+          console.error(`Failed to send notifications to ${contact.name} (${contact.phoneNumber}):`, error.message);
           return {
             contactName: contact.name,
+            phoneNumber: contact.phoneNumber,
             status: 'failed',
             error: error.message
           };
