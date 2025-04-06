@@ -176,6 +176,37 @@
     margin-bottom: 20px;
   }
   
+  /* Symptoms selection styling */
+  .symptoms-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .symptom-option {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .symptom-option:hover {
+    background-color: #e9ecef;
+  }
+
+  .symptom-option input[type="checkbox"] {
+    margin-right: 8px;
+  }
+
+  .symptom-option input[type="checkbox"]:checked + label {
+    font-weight: 600;
+    color: #007bff;
+  }
+
   /* Buttons */
   .buttons {
     display: flex;
