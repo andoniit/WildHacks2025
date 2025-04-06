@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import './MultiStepForm.css'; 
+import { AuthService } from '../services/api.service';
+import { useNavigate } from 'react-router-dom';
 
 const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -14,13 +19,46 @@ const MultiStepForm = () => {
     latestStart: '',
     latestEnd: '',
     systemNote: '',
+    symptoms: [],
     lovedOnes: [{ name: '', phone: '', relation: '' }],
   });
+
+  // Available symptoms options
+  const symptomsOptions = [
+    'Cramps',
+    'Bloating',
+    'Mood Swings',
+    'Fatigue',
+    'Headaches',
+    'Changes in Appetite'
+  ];
 
   // Handle changes for input fields in steps 1 and 2
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle symptom selection (multi-select)
+  const handleSymptomChange = (symptom) => {
+    setFormData(prev => {
+      const updatedSymptoms = [...prev.symptoms];
+      
+      // Toggle symptom selection
+      if (updatedSymptoms.includes(symptom)) {
+        // Remove symptom if already selected
+        return {
+          ...prev,
+          symptoms: updatedSymptoms.filter(s => s !== symptom)
+        };
+      } else {
+        // Add symptom if not already selected
+        return {
+          ...prev,
+          symptoms: [...updatedSymptoms, symptom]
+        };
+      }
+    });
   };
 
   // Handle changes for dynamic loved ones fields in step 3
@@ -46,9 +84,27 @@ const MultiStepForm = () => {
         alert('Please fill all required fields in Personal Information');
         return false;
       }
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        alert('Please enter a valid email address');
+        return false;
+      }
+      // Phone validation (simple check for now)
+      if (formData.phone.length < 10) {
+        alert('Please enter a valid phone number');
+        return false;
+      }
     } else if (currentStep === 1) {
       if (!formData.cycleGap || !formData.latestStart || !formData.latestEnd) {
         alert('Please fill all required fields in Cycle Details');
+        return false;
+      }
+      // Validate dates
+      const startDate = new Date(formData.latestStart);
+      const endDate = new Date(formData.latestEnd);
+      if (endDate < startDate) {
+        alert('End date cannot be before start date');
         return false;
       }
     } else if (currentStep === 2) {
@@ -74,11 +130,61 @@ const MultiStepForm = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateStep()) {
-      console.log('Form submitted with data:', formData);
-      setSubmitted(true);
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // Format data for backend API
+        const userData = {
+          name: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+          age: parseInt(formData.age),
+          phoneNumber: formData.phone
+        };
+        
+        const cycleData = {
+          avgCycleLength: parseInt(formData.cycleGap),
+          lastCycleStart: formData.latestStart,
+          lastCycleEnd: formData.latestEnd,
+          symptoms: formData.symptoms, // Include the selected symptoms
+          notes: formData.systemNote || ''
+        };
+        
+        const contactsData = formData.lovedOnes.map(person => ({
+          name: person.name,
+          phoneNumber: person.phone,
+          relation: person.relation,
+          notificationPreferences: {
+            receiveUpdates: true,
+            customAlerts: ['cycle_start', 'cycle_end']
+          }
+        }));
+        
+        // Register user with all the information using the AuthService
+        const response = await AuthService.register(userData, cycleData, contactsData);
+        
+        console.log('Registration successful:', response.data);
+        
+        // Show success message for 2 seconds, then redirect to login page
+        setSubmitted(true);
+        
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+        
+      } catch (err) {
+        console.error('Registration error:', err);
+        setError(
+          err.response?.data?.message || 
+          'An error occurred during registration. Please try again.'
+        );
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -114,6 +220,11 @@ const MultiStepForm = () => {
 
       {/* Main Form Content */}
       <div className="main-content">
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           {currentStep === 0 && (
             <div className="form-step active">
@@ -220,6 +331,22 @@ const MultiStepForm = () => {
                 />
               </div>
               <div className="form-group">
+                <label>Common Symptoms</label>
+                <div className="symptoms-selection">
+                  {symptomsOptions.map((symptom) => (
+                    <div className="symptom-option" key={symptom}>
+                      <input
+                        type="checkbox"
+                        id={symptom}
+                        checked={formData.symptoms.includes(symptom)}
+                        onChange={() => handleSymptomChange(symptom)}
+                      />
+                      <label htmlFor={symptom}>{symptom}</label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="form-group">
                 <label>System Note</label>
                 <textarea
                   name="systemNote"
@@ -285,7 +412,9 @@ const MultiStepForm = () => {
               <div className="buttons">
                 <button type="button" onClick={addLovedOne}>Add Another Loved One</button>
                 <button type="button" onClick={handlePrev}>Back</button>
-                <button type="submit">Complete Registration</button>
+                <button type="submit" disabled={isLoading}>
+                  {isLoading ? 'Registering...' : 'Complete Registration'}
+                </button>
               </div>
             </div>
           )}
