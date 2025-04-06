@@ -96,21 +96,35 @@ class TwilioService {
   }
 
   /**
-   * Replace placeholders in template message with actual data
+   * Helper function to personalize message with data
    * @private
-   * @param {String} template - Message template
-   * @param {Object} data - Data to inject into template
+   * @param {String} message - Message template
+   * @param {Object} data - Data for personalization
    * @returns {String} - Personalized message
    */
-  _personalizeMessage(template, data) {
-    let message = template;
+  _personalizeMessage(message, data) {
+    let personalizedMsg = message;
     
-    // Replace placeholders with data values
-    for (const [key, value] of Object.entries(data)) {
-      message = message.replace(new RegExp(`{{${key}}}`, 'g'), value);
+    // If custom message is provided, use it directly
+    if (data.customMessage) {
+      return data.customMessage;
     }
     
-    return message;
+    // Replace placeholders with actual data
+    if (data.userName) {
+      personalizedMsg = personalizedMsg.replace(/{{\s*userName\s*}}/g, data.userName);
+    }
+    
+    if (data.daysUntil !== undefined) {
+      personalizedMsg = personalizedMsg.replace(/{{\s*daysUntil\s*}}/g, data.daysUntil);
+    }
+    
+    // Replace any other data variables
+    Object.keys(data).forEach(key => {
+      personalizedMsg = personalizedMsg.replace(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), data[key]);
+    });
+    
+    return personalizedMsg;
   }
 
   _formatPhoneNumber(phoneNumber) {

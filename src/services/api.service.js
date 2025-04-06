@@ -185,20 +185,19 @@ export const CalendarService = {
   },
   
   createCalendarEvent: (eventData) => {
-    // Ensure eventData contains startDate, endDate, category, title
-    const requiredFields = ['startDate', 'endDate', 'category', 'title'];
-    requiredFields.forEach(field => {
-      if (!eventData[field]) {
-        throw new Error(`${field} is required for calendar events`);
-      }
-    });
-    
-    // Validate start and end dates
-    if (new Date(eventData.endDate) < new Date(eventData.startDate)) {
-      throw new Error('End date must be after or equal to start date');
+    // If we're sending a single event, structure it correctly for the validation middleware
+    if (eventData.calendarInfo && Array.isArray(eventData.calendarInfo) && eventData.calendarInfo.length > 0) {
+      // For a collection of events, send directly to the bulk endpoint
+      return apiClient.put(API_ENDPOINTS.CALENDAR.GET_ALL, eventData);
+    } else {
+      // For a single event, send to the create endpoint
+      return apiClient.post(API_ENDPOINTS.CALENDAR.GET_ALL, eventData);
     }
-    
-    return apiClient.post(API_ENDPOINTS.CALENDAR.GET_ALL, eventData);
+  },
+  
+  updateCalendarEvents: (calendarData) => {
+    // This function will replace all calendar events for the user
+    return apiClient.put(API_ENDPOINTS.CALENDAR.GET_ALL, calendarData);
   },
   
   updateCalendarEvent: (id, eventData) => {

@@ -28,6 +28,17 @@ router.get(
 );
 
 /**
+ * @route   PUT /api/calendar
+ * @desc    Update all calendar events for a user (bulk update)
+ * @access  Private
+ */
+router.put(
+  '/',
+  verifyToken,
+  calendarController.updateAllCalendarEvents
+);
+
+/**
  * @route   PUT /api/calendar/:eventId
  * @desc    Update a calendar event
  * @access  Private
