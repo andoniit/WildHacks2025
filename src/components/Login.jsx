@@ -28,10 +28,14 @@ const LoginPage = () => {
       const response = await AuthService.login(credentials.email, credentials.password);
       
       // Store token
-      if (response.data.token) {
+      if (response.data && response.data.token) {
         localStorage.setItem('cycleconnect_token', response.data.token);
-        // Redirect to dashboard (you can use react-router's navigate here)
-        window.location.href = '/dashboard';
+        console.log('Token stored:', response.data.token.substring(0, 10) + '...');
+        // Redirect to timeline page
+        window.location.href = '/timeline';
+      } else {
+        console.error('No token received in login response');
+        setError('Authentication failed. Please try again.');
       }
     } catch (err) {
       console.error('Login error:', err);

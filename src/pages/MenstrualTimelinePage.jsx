@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserService, CycleService, CalendarService, AuthService } from '../services/api.service';
 import './PeriodCalendar.css';
 import Navbar from "../components/nav";
 
@@ -11,9 +13,65 @@ const MenstrualTimelinePage = () => {
   const [note, setNote] = useState('');
   const [editingMode, setEditingMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [timelineData, setTimelineData] = useState(null);
+  const [cycles, setCycles] = useState([]);
+  const [calendarEvents, setCalendarEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  // Load saved periods from localStorage on mount
   useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('cycleconnect_token');
+    if (!token) {
+      console.error('No token found in localStorage, redirecting to login');
+      navigate('/login');
+      return;
+    }
+
+    console.log('Token exists in localStorage:', token.substring(0, 10) + '...');
+
+    // Fetch timeline data
+    const fetchTimelineData = async () => {
+      setIsLoading(true);
+      try {
+        // First try to verify token is valid
+        await AuthService.verifyToken();
+        
+        // Fetch all required data in parallel
+        const [timelineResponse, cyclesResponse, calendarResponse] = await Promise.all([
+          UserService.getTimelineData(),
+          CycleService.getAllCycles(),
+          CalendarService.getCalendarEvents()
+        ]);
+
+        console.log('Timeline response:', timelineResponse?.data);
+        
+        setTimelineData(timelineResponse?.data?.data || {});
+        setCycles(cyclesResponse?.data?.data || []);
+        setCalendarEvents(calendarResponse?.data?.data || []);
+      } catch (err) {
+        console.error('Error fetching timeline data:', err);
+        
+        // If unauthorized, redirect to login
+        if (err.response && err.response.status === 401) {
+          console.error('Unauthorized access, redirecting to login');
+          localStorage.removeItem('cycleconnect_token');
+          navigate('/login');
+          return;
+        }
+        
+        setError('Failed to load timeline data. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTimelineData();
+  }, [navigate]);
+
+  useEffect(() => {
+    // Load saved periods from localStorage on mount
     const storedPeriods = localStorage.getItem('periods');
     if (storedPeriods) {
       setPeriods(JSON.parse(storedPeriods));
@@ -147,6 +205,14 @@ const MenstrualTimelinePage = () => {
     predictedDate.setDate(predictedDate.getDate() + 28);
   }
 
+  if (isLoading) {
+    return <div className="loading-container">Loading timeline data...</div>;
+  }
+
+  if (error) {
+    return <div className="error-container">{error}</div>;
+  }
+
   return (
     <>
     <Navbar/>
@@ -191,7 +257,7 @@ const MenstrualTimelinePage = () => {
               filteredPeriods.map((period, index) => (
                 <div key={index} className="period-entry" style={{ marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #eee' }}>
                   <p className="note-message">Start Date: {period.startDate}</p>
-                  <p className="note-message">End Date: {period.endDate}</p>
+                  <p className="note-message">EstimatedEnd Date: {period.endDate}</p>
                   <p className="note-message">Note: {period.note}</p>
                   <p className="note-timestamp">Added on: {new Date(period.createdAt).toLocaleString()}</p>
                   <div style={{ marginTop: '0.5rem' }}>

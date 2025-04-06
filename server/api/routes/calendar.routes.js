@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const calendarController = require('../controllers/calendar.controller');
 const { validateCalendarEvent } = require('../middleware/validation.middleware');
-const { verifyToken } = require('../controllers/auth.controller');
+const { verifyToken } = require('../middleware/auth.middleware');
 
 /**
  * @route   POST /api/calendar

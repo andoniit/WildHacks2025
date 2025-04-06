@@ -1,13 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { verifyToken } = require('../middleware/auth.middleware');
+
+// Import controllers
 const { 
   getUserProfile, 
   updateUserProfile, 
   updateCycleStatus, 
   deleteUser,
-  getDashboardData 
+  getTimelineData 
 } = require('../controllers/user.controller');
+
+// Import middleware
+const { verifyToken } = require('../middleware/auth.middleware');
 
 // Get user profile
 router.get('/profile', verifyToken, getUserProfile);
@@ -18,8 +22,8 @@ router.put('/profile', verifyToken, updateUserProfile);
 // Update cycle information
 router.put('/cycle-info', verifyToken, updateCycleStatus);
 
-// Get dashboard data
-router.get('/dashboard', verifyToken, getDashboardData);
+// Get timeline data
+router.get('/timeline', verifyToken, getTimelineData);
 
 // Delete user account
 router.delete('/', verifyToken, deleteUser);

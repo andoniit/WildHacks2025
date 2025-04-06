@@ -15,10 +15,14 @@ apiClient.interceptors.request.use(
     const token = localStorage.getItem('cycleconnect_token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
+      console.log('Token added to request headers');
+    } else {
+      console.warn('No token found when making request to:', config.url);
     }
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -31,9 +35,13 @@ apiClient.interceptors.response.use(
   (error) => {
     // Handle unauthorized errors (token expired)
     if (error.response && error.response.status === 401) {
+      console.error('Unauthorized error (401) detected');
       localStorage.removeItem('cycleconnect_token');
-      // Redirect to login page if needed
-      // window.location.href = '/login';
+      // Redirect to login page if not already there
+      if (!window.location.pathname.includes('/login')) {
+        console.log('Redirecting to login page due to 401 error');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
@@ -54,6 +62,7 @@ export const AuthService = {
   },
   
   logout: () => {
+    localStorage.removeItem('cycleconnect_token');
     return apiClient.post(API_ENDPOINTS.AUTH.LOGOUT);
   },
   
@@ -76,8 +85,8 @@ export const UserService = {
     return apiClient.put(API_ENDPOINTS.USER.CYCLE_INFO, cycleData);
   },
   
-  getDashboardData: () => {
-    return apiClient.get(API_ENDPOINTS.USER.DASHBOARD);
+  getTimelineData: () => {
+    return apiClient.get(API_ENDPOINTS.USER.TIMELINE);
   }
 };
 
@@ -169,11 +178,54 @@ export const NotificationService = {
   }
 };
 
-export default {
+// Calendar services
+export const CalendarService = {
+  getCalendarEvents: (filters = {}) => {
+    return apiClient.get(API_ENDPOINTS.CALENDAR.GET_ALL, { params: filters });
+  },
+  
+  createCalendarEvent: (eventData) => {
+    // Ensure eventData contains startDate, endDate, category, title
+    const requiredFields = ['startDate', 'endDate', 'category', 'title'];
+    requiredFields.forEach(field => {
+      if (!eventData[field]) {
+        throw new Error(`${field} is required for calendar events`);
+      }
+    });
+    
+    // Validate start and end dates
+    if (new Date(eventData.endDate) < new Date(eventData.startDate)) {
+      throw new Error('End date must be after or equal to start date');
+    }
+    
+    return apiClient.post(API_ENDPOINTS.CALENDAR.GET_ALL, eventData);
+  },
+  
+  updateCalendarEvent: (id, eventData) => {
+    // Validate start and end dates if both are provided
+    if (eventData.startDate && eventData.endDate) {
+      if (new Date(eventData.endDate) < new Date(eventData.startDate)) {
+        throw new Error('End date must be after or equal to start date');
+      }
+    }
+    
+    return apiClient.put(`${API_ENDPOINTS.CALENDAR.GET_ALL}/${id}`, eventData);
+  },
+  
+  deleteCalendarEvent: (id) => {
+    return apiClient.delete(`${API_ENDPOINTS.CALENDAR.GET_ALL}/${id}`);
+  }
+};
+
+// Export all services together
+export const ApiServices = {
   AuthService,
   UserService,
   CycleService,
   ContactService,
   AlertService,
-  NotificationService
+  NotificationService,
+  CalendarService
 };
+
+export default ApiServices;

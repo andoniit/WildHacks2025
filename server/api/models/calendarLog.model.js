@@ -13,7 +13,11 @@ const CalendarLogSchema = new Schema({
     index: true  // Add index for faster queries
   },
   calendarInfo: [{
-    date: {
+    startDate: {
+      type: Date,
+      required: true
+    },
+    endDate: {
       type: Date,
       required: true
     },
@@ -46,3 +50,4 @@ const CalendarLogSchema = new Schema({
 const CalendarLog = mongoose.model('CalendarLog', CalendarLogSchema);
 
 module.exports = CalendarLog;
+

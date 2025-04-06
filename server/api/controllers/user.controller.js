@@ -1,6 +1,7 @@
 const User = require('../models/user.model');
 const CycleLog = require('../models/cycleLog.model');
 const Contact = require('../models/contact.model');
+const CalendarLog = require('../models/calendarLog.model');
 const bcrypt = require('bcryptjs');
 const { ApiError } = require('../../utils/errorHandler');
 
@@ -149,39 +150,41 @@ const deleteUser = async (req, res, next) => {
 };
 
 /**
- * Get user dashboard data
+ * Get user timeline data
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
  */
-const getDashboardData = async (req, res, next) => {
+const getTimelineData = async (req, res, next) => {
   try {
     const { email } = req.user;
     
     // Get user data
     const user = await User.findOne({ email }).select('-password');
-    
     if (!user) {
       throw new ApiError(404, 'User not found');
     }
     
-    // Get recent cycle data
+    // Fetch cycle data for this user
     const cycleData = await CycleLog.findOne({ email });
     
-    // Get contacts count
-    const contactsData = await Contact.findOne({ email });
-    const contactsCount = contactsData ? contactsData.contacts.length : 0;
+    // Fetch calendar events
+    const calendarData = await CalendarLog.findOne({ email });
     
     res.status(200).json({
       success: true,
-      dashboard: {
+      data: {
         user: {
           name: user.name,
-          cycleStatus: user.cycleStatus,
-          avgCycleLength: user.avgCycleLength
+          email: user.email,
+          cycleLength: user.cycleLength,
+          periodLength: user.periodLength
         },
-        cycleInfo: cycleData ? cycleData.cycInfo.slice(-3) : [], // Last 3 cycles
-        contactsCount: contactsCount
+        timeline: {
+          cycles: cycleData ? cycleData.cycles : [],
+          predictions: generatePredictions(user, cycleData),
+          calendarEvents: calendarData ? calendarData.calendarInfo : []
+        }
       }
     });
   } catch (error) {
@@ -189,10 +192,67 @@ const getDashboardData = async (req, res, next) => {
   }
 };
 
+/**
+ * Generate cycle predictions based on user data
+ * @param {Object} user - User object
+ * @param {Object} cycleData - Cycle data
+ * @returns {Array} - Array of predictions
+ */
+const generatePredictions = (user, cycleData) => {
+  const predictions = [];
+  
+  // Return empty predictions if there's no cycle data or if cycles array is missing/empty
+  if (!cycleData || !cycleData.cycles || cycleData.cycles.length < 2) {
+    return predictions;
+  }
+  
+  try {
+    const sortedCycles = [...cycleData.cycles].sort((a, b) => 
+      new Date(b.startDate) - new Date(a.startDate)
+    );
+    
+    if (sortedCycles.length === 0) {
+      return predictions;
+    }
+    
+    const lastCycle = sortedCycles[0];
+    const lastStartDate = new Date(lastCycle.startDate);
+    
+    // Predict next period
+    const nextPeriodDate = new Date(lastStartDate);
+    nextPeriodDate.setDate(nextPeriodDate.getDate() + (user.cycleLength || 28));
+    
+    predictions.push({
+      type: 'Period',
+      date: nextPeriodDate,
+      confidence: sortedCycles.length > 3 ? 'High' : 'Medium'
+    });
+    
+    // Predict ovulation (typically 14 days before next period)
+    const ovulationDate = new Date(nextPeriodDate);
+    ovulationDate.setDate(nextPeriodDate.getDate() - 14);
+    
+    // Only add ovulation prediction if it's in the future
+    if (ovulationDate > new Date()) {
+      predictions.push({
+        type: 'Ovulation',
+        date: ovulationDate,
+        confidence: sortedCycles.length > 3 ? 'Medium' : 'Low'
+      });
+    }
+    
+    return predictions;
+  } catch (error) {
+    console.error('Error generating predictions:', error);
+    return predictions; // Return empty predictions array on error
+  }
+};
+
+// Export controller functions
 module.exports = {
   getUserProfile,
   updateUserProfile,
   updateCycleStatus,
   deleteUser,
-  getDashboardData
+  getTimelineData
 };

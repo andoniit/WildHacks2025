@@ -158,23 +158,38 @@ const validateAlert = (req, res, next) => {
  * @param {Function} next - Express next middleware function
  */
 const validateCalendarEvent = (req, res, next) => {
-  const { date, category, title } = req.body;
-  
-  // Validate date
-  if (!date || !isValidDate(date)) {
-    return next(new ApiError(400, 'Valid date is required'));
+  const { startDate, endDate, category, title } = req.body;
+
+  if (!startDate) {
+    return next(new ApiError(400, 'Start date is required'));
   }
-  
-  // Validate category
-  if (!category || typeof category !== 'string' || category.trim() === '') {
-    return next(new ApiError(400, 'Valid category is required'));
+
+  if (!endDate) {
+    return next(new ApiError(400, 'End date is required'));
   }
-  
-  // Validate title
-  if (!title || typeof title !== 'string' || title.trim() === '') {
-    return next(new ApiError(400, 'Valid title is required'));
+
+  if (!category) {
+    return next(new ApiError(400, 'Category is required'));
   }
-  
+
+  if (!title) {
+    return next(new ApiError(400, 'Title is required'));
+  }
+
+  // Validate date formats
+  if (isNaN(new Date(startDate).getTime())) {
+    return next(new ApiError(400, 'Invalid start date format'));
+  }
+
+  if (isNaN(new Date(endDate).getTime())) {
+    return next(new ApiError(400, 'Invalid end date format'));
+  }
+
+  // Validate that end date is after or equal to start date
+  if (new Date(endDate) < new Date(startDate)) {
+    return next(new ApiError(400, 'End date must be after or equal to start date'));
+  }
+
   next();
 };
 

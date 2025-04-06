@@ -10,10 +10,10 @@ const { ApiError } = require('../../utils/errorHandler');
 const createCalendarEvent = async (req, res, next) => {
   try {
     const { email } = req.user; // Assuming authentication middleware attaches user to req
-    const { date, category, title, note } = req.body;
+    const { startDate, endDate, category, title, note } = req.body;
 
-    if (!date || !category || !title) {
-      throw new ApiError(400, 'Date, category, and title are required fields');
+    if (!startDate || !endDate || !category || !title) {
+      throw new ApiError(400, 'Start date, end date, category, and title are required fields');
     }
 
     // Check if user already has a calendar log
@@ -22,7 +22,8 @@ const createCalendarEvent = async (req, res, next) => {
     if (calendarLog) {
       // Add new event to existing log
       calendarLog.calendarInfo.push({
-        date,
+        startDate,
+        endDate,
         category,
         title,
         note: note || ''
@@ -34,7 +35,8 @@ const createCalendarEvent = async (req, res, next) => {
       calendarLog = await CalendarLog.create({
         email,
         calendarInfo: [{
-          date,
+          startDate,
+          endDate,
           category,
           title,
           note: note || ''
@@ -61,7 +63,7 @@ const createCalendarEvent = async (req, res, next) => {
 const getCalendarEvents = async (req, res, next) => {
   try {
     const { email } = req.user; // Assuming authentication middleware attaches user to req
-    const { startDate, endDate, category } = req.query;
+    const { startDateFrom, startDateTo, endDateFrom, endDateTo, category } = req.query;
     
     // Find calendar log for user
     const calendarLog = await CalendarLog.findOne({ email });
@@ -77,20 +79,31 @@ const getCalendarEvents = async (req, res, next) => {
     // Filter events based on query parameters if provided
     let events = calendarLog.calendarInfo;
     
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
+    // Filter by start date range
+    if (startDateFrom && startDateTo) {
+      const start = new Date(startDateFrom);
+      const end = new Date(startDateTo);
       events = events.filter(event => 
-        new Date(event.date) >= start && new Date(event.date) <= end
+        new Date(event.startDate) >= start && new Date(event.startDate) <= end
       );
     }
     
+    // Filter by end date range
+    if (endDateFrom && endDateTo) {
+      const start = new Date(endDateFrom);
+      const end = new Date(endDateTo);
+      events = events.filter(event => 
+        new Date(event.endDate) >= start && new Date(event.endDate) <= end
+      );
+    }
+    
+    // Filter by category
     if (category) {
       events = events.filter(event => event.category === category);
     }
     
-    // Sort events by date (newest first)
-    events.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Sort events by start date (newest first)
+    events.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
     
     res.status(200).json({
       success: true,
@@ -112,7 +125,7 @@ const updateCalendarEvent = async (req, res, next) => {
   try {
     const { email } = req.user; // Assuming authentication middleware attaches user to req
     const { eventId } = req.params;
-    const { date, category, title, note } = req.body;
+    const { startDate, endDate, category, title, note } = req.body;
 
     if (!eventId) {
       throw new ApiError(400, 'Event ID is required');
@@ -135,7 +148,8 @@ const updateCalendarEvent = async (req, res, next) => {
     }
     
     // Update event fields if provided
-    if (date) calendarLog.calendarInfo[eventIndex].date = date;
+    if (startDate) calendarLog.calendarInfo[eventIndex].startDate = startDate;
+    if (endDate) calendarLog.calendarInfo[eventIndex].endDate = endDate;
     if (category) calendarLog.calendarInfo[eventIndex].category = category;
     if (title) calendarLog.calendarInfo[eventIndex].title = title;
     if (note !== undefined) calendarLog.calendarInfo[eventIndex].note = note;

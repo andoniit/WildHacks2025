@@ -16,7 +16,7 @@ const API_ENDPOINTS = {
   USER: {
     PROFILE: `${API_BASE_URL}/users/profile`,
     CYCLE_INFO: `${API_BASE_URL}/users/cycle-info`,
-    DASHBOARD: `${API_BASE_URL}/users/dashboard`,
+    TIMELINE: `${API_BASE_URL}/users/timeline`,
   },
   // Cycle endpoints
   CYCLE: {
@@ -37,6 +37,10 @@ const API_ENDPOINTS = {
   NOTIFICATION: {
     SEND: `${API_BASE_URL}/notifications/send`,
     TEST: `${API_BASE_URL}/notifications/test`,
+  },
+  // Calendar endpoints
+  CALENDAR: {
+    GET_ALL: `${API_BASE_URL}/calendar`,
   },
 };
 
