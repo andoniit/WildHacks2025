@@ -62,6 +62,9 @@ out/
 # Serverless directories
 .serverless/
 
+# Package lock files
+server/package-lock.json
+
 # OS generated files
 .DS_Store
 .DS_Store?
